@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Agriculture Monitor</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 24px;
+      display: grid;
+      place-items: center;
+      font-family: Arial, sans-serif;
+      color: #183b2b;
+      background: #edf6ee;
+    }
+
+    .dashboard {
+      width: min(100%, 620px);
+      padding: 28px;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 8px 28px #183b2b1c;
+    }
+
+    h1 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .subtitle {
+      margin-bottom: 24px;
+      text-align: center;
+      color: #587164;
+    }
+
+    .readings {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      padding: 20px;
+      border: 1px solid #dce9df;
+      border-radius: 14px;
+      background: #f9fcf9;
+    }
+
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+      color: #456253;
+    }
+
+    .value {
+      margin: 0;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    .unit {
+      font-size: 1rem;
+      font-weight: normal;
+    }
+
+    .advice {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 12px;
+      background: #e8f5e9;
+      font-weight: bold;
+    }
+
+    .controls {
+      margin-top: 22px;
+    }
+
+    .control {
+      margin: 16px 0;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #26834a;
+    }
+
+    @media (max-width: 480px) {
+      .readings {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="dashboard">
+    <h1>Smart Agriculture Monitor</h1>
+    <p class="subtitle">Simulated field readings and watering advice</p>
+
+    <section class="readings" aria-label="Sensor readings">
+      <article class="card">
+        <h2>Soil Moisture</h2>
+        <p class="value"><span id="moistureValue">35</span><span class="unit">%</span></p>
+      </article>
+
+      <article class="card">
+        <h2>Temperature</h2>
+        <p class="value"><span id="temperatureValue">28</span><span class="unit">°C</span></p>
+      </article>
+    </section>
+
+    <p id="advice" class="advice" aria-live="polite"></p>
+
+    <section class="controls" aria-label="Adjust simulated sensor readings">
+      <div class="control">
+        <label for="moistureSlider">
+          <span>Adjust soil moisture</span>
+          <span><span id="moistureControlValue">35</span>%</span>
+        </label>
+        <input id="moistureSlider" type="range" min="0" max="100" value="35">
+      </div>
+
+      <div class="control">
+        <label for="temperatureSlider">
+          <span>Adjust temperature</span>
+          <span><span id="temperatureControlValue">28</span>°C</span>
+        </label>
+        <input id="temperatureSlider" type="range" min="0" max="50" value="28">
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const moistureSlider = document.getElementById("moistureSlider");
+    const temperatureSlider = document.getElementById("temperatureSlider");
+
+    function updateDashboard() {
+      const moisture = Number(moistureSlider.value);
+      const temperature = Number(temperatureSlider.value);
+
+      document.getElementById("moistureValue").textContent = moisture;
+      document.getElementById("moistureControlValue").textContent = moisture;
+
+      document.getElementById("temperatureValue").textContent = temperature;
+      document.getElementById("temperatureControlValue").textContent = temperature;
+
+      const advice = document.getElementById("advice");
+
+      if (moisture < 30) {
+        advice.textContent = "Soil is dry. Watering is recommended.";
+      } else if (moisture > 80) {
+        advice.textContent = "Soil is very wet. Avoid watering.";
+      } else if (temperature >= 35) {
+        advice.textContent = "Temperature is high. Monitor the crop and soil.";
+      } else {
+        advice.textContent = "Conditions look suitable. Keep monitoring.";
+      }
+    }
+
+    moistureSlider.addEventListener("input", updateDashboard);
+    temperatureSlider.addEventListener("input", updateDashboard);
+
+    updateDashboard();
+  </script>
+</body>
+</html>
